@@ -1,0 +1,39 @@
+
+初始化（https://svelte.dev/docs/introduction）：
+
+npm create svelte@latest myapp
+cd myapp
+npm install
+npm run dev
+
+
+
+
+
+
+配置静态模式（https://kit.svelte.dev/docs/adapter-static）：
+
+配置 项目 ./svelte.config.js 为：
+export default {
+	kit: {
+		trailingSlash: 'never', // 如何处理斜杠 或 'always', 或 'ignore'
+		adapter: adapter({
+			// default options are shown. On some platforms
+			// these options are set automatically — see below
+			pages: 'build',
+			assets: 'build',
+			fallback: undefined,
+			precompress: false,
+			strict: true
+		})
+	}
+};
+
+安装：
+npm install -D @sveltejs/adapter-static
+
+
+
+
+更新sveltekit ：
+npm update @sveltejs/kit

@@ -1,0 +1,17 @@
+icons
+
+在线搜索：
+https://fontawesome.com/
+https://remixicon.com/
+https://feathericons.com/
+https://tabler-icons.io/
+
+https://www.svgrepo.com/
+https://master--628d031b55e942004ac95df1.chromatic.com/?path=/docs/concepts-developer-icons-icons-catalog--page
+
+
+git仓库：
+https://github.com/FortAwesome/Font-Awesome.git
+https://github.com/Remix-Design/RemixIcon.git
+https://github.com/feathericons/feather.git
+https://github.com/tabler/tabler-icons.git

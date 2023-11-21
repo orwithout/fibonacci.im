@@ -1,0 +1,29 @@
+前端根页面，是个含javascript功能的静态网页，可接受这样的网址访问：
+http://fibonacci.im
+http://fibonacci.im/
+http://fibonacci.im/?a00==http://127.0.0.1:8002/0/a00?v1=x&v2=y|a00_ctrl==http://127.0.0.1:8002/0/a01?v3=1&v4=0|infoBase=={"k1":["v1","v2"],"k2":["v2"]}
+最后这一行，会被解析，获得参数 optionBase:
+{
+    "a00": "http://127.0.0.1:8002/0/a00?v1=x&v2=y",
+    "a00_ctrl": "http://127.0.0.1:8002/0/a01?v3=1&v4=0",
+    "infoBase": {"k1":["v1","v2"],"k2":["v2"]}
+}
+
+接着请求optionBase中的所有网址，将infoBase的内容 覆盖到获得的数据，得到新的infoBase ：
+{
+    "a00": [
+        "0/a00/.auth",
+        "0/a00/我",
+        "0/a00/我/nickname.灰面.txt"
+    ],
+    "a00_ctrl": [
+        "0/a00_ctrl/$lib/tree.js
+    ],
+    "k1": [
+        "v1",
+        "v2"
+    ],
+    "k2": [
+        "v2"
+    ]
+}
