@@ -1,45 +1,9 @@
 <script>
     import TreeNode from '$lib/tree/TreeNode.svelte';
-	import Explorer from '$lib/tree//Explorer.svelte';
 
     export let option = [];
     export let infoset = [];
 
-
-    let root = [
-		{
-			type: 'folder',
-			name: 'Important work stuff',
-			files: [{ type: 'file', name: 'quarterly-results.xlsx' }]
-		},
-        { type: 'file', name: 'monkey-on-a-pig.gif' },
-		{
-            
-            type: 'folder',
-			name: 'Animal GIFs',
-			files: [
-				{
-					type: 'folder',
-					name: 'Dogs',
-					files: [
-						{ type: 'file', name: 'treadmill.gif' },
-						{ type: 'file', name: 'rope-jumping.gif' }
-					]
-				},
-				{
-					type: 'folder',
-					name: 'Goats',
-					files: [
-						{ type: 'file', name: 'parkour.gif' },
-						{ type: 'file', name: 'rampage.gif' }
-					]
-				},
-				{ type: 'file', name: 'cat-roomba.gif' },
-				{ type: 'file', name: 'duck-shuffle.gif' }
-			]
-		},
-		{ type: 'file', name: 'TODO.md' }
-	];
 
 
     // 预处理 infoset

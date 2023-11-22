@@ -40,8 +40,37 @@
 		// 第五、六个参数是回调函数,用于处理 options，infoBase
 		// 所以 infoBase 是多方数据合并而来，合并顺序是: infoBase 初始值 < url 参数请求的返回 < 指定的 url 参数中的 key 的值
         initializePageData({"a00":`${window.location.origin}/0/a00`}, {}, infoUrl, "infoBase", (result)=>{infoUrl=result;}, (result)=>{infoBase=result;})
+		// 后端需要能返回的数据结构（python）：
+		//from pathlib import Path
+		//def read(verify_token=False, sub_path=""):
+	    //    path = Path(sub_path)
+    	//    # 包括文件和目录，但不包括sub_path本身
+    	//    return [p.relative_to(path).as_posix() for p in path.rglob('*')]
+		//执行后返回：
+		//[
+		// ".auth",
+		// "我",
+		// "探索",
+		// "通讯录",
+		// ".auth/.auth.json",
+		// ".auth/github.{id}.txt",
+		// ".auth/google.{id}.txt",
+		// ".auth/login.env",
+		// ".auth/password_hash.user@example.com.txt",
+		// ".auth/token_blacklist.txt",
+		// ".auth/uuid.txt",
+		// ".auth/wechat.{id}.txt"
+		//]
+
     });
 </script>
 
+
+
+
+
 <h1>Welcome to SvelteKit</h1>
 <p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+
+
+
