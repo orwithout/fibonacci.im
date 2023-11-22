@@ -1,7 +1,7 @@
-# senseVine 项目说明
+# Fibonacci.im（AI多轮对话应用助理的前端）项目说明
 
 
-查看： [设计文档](正在准备)
+设计文档 (正在准备)
 
 
 
@@ -21,7 +21,7 @@
 
 
 2. 安装nodejs  
-   windows 系统 下载最新版: [Node.js 官方下载页面](https://nodejs.org/en/download)  
+   windows 系统 下载最新版自行安装: [Node.js 官方下载页面](https://nodejs.org/en/download)  
    Linux 系统 执行：
    ```bash
    # 使用nvm 安装node
@@ -42,7 +42,7 @@
     ```
 5. 运行前端：
     ```bash
-    npm run dev
+    npm run dev --port 8005
     ```
 6. 打开浏览器访问：http://localhost:8005/  
    （正在准备,目前是个空白页面）
