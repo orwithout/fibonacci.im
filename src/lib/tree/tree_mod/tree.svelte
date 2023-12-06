@@ -5,7 +5,6 @@
     export let infoset = [];
 
 
-
     // 预处理 infoset
     let topLevelInfoset = {};
 
@@ -15,10 +14,10 @@
 </script>
 
 <!-- 处理并渲染 option -->
-{#each Object.entries(option) as [key, value]}
+<!-- {#each Object.entries(option) as [key, value]}
     <Explorer name="Home" files={root} expanded />
 	
-{/each}
+{/each} -->
 
 <!-- 处理并渲染 infoset -->
 {#each Object.entries(topLevelInfoset) as [key, value]}
