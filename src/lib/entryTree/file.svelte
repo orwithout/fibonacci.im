@@ -26,11 +26,10 @@
 
 
     $: infoset = {[primaryKey]:$infoBase[primaryKey]};
-    let component;
+    let components;
     onMount(async () => {
-        const moduleRegex = /(?<=\$)lib(\/.+)+\.(js|svelte)(?=#file.button.i)/;
-        // console.log("componentx:", component);
-        component = await loadComponents(infoset, moduleRegex);
+        const moduleRegex = /(?<=\$)lib(\/[^\$]+)+\.(js|svelte)(?=[#\/]fileNameButton\.(\d+)\.senseurl\.x)/;
+        components = await loadComponents(infoset, moduleRegex);
         // console.log("component:", component);
     });
     
@@ -49,14 +48,16 @@
         on:error={handleIconError} />
 </button>
 
-{#if component}
-    <svelte:component this={component[primaryKey]} {primaryKey} {path} {children}/><br>
+
+
+{#if components && components[primaryKey]}
+    {#each components[primaryKey] as component}
+        <svelte:component this={component} {primaryKey} {path} {children}/>
+    {/each}
 {/if}
 
 
-
 <style>
-
     .icon {
         margin-left: 0.435em;
         width: 1em;

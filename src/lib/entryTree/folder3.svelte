@@ -4,47 +4,37 @@
     import { slide } from "svelte/transition";
     import { infoBase } from '$lib/entry/STORE.js';
     import { loadComponents } from '$lib/entry/getopt.js';
-    import { toggleProperty } from '$lib/entry/fileSystemUtils';
-    
+    import { isFolder, sortEntries, GetChildEntries } from '$lib/entry/fileSystemUtils';
+
     export let primaryKey;
     export let path;
     export let children;
 
-    
-    // 创建一个本地存储来跟踪展开状态
-    const pathSelectedProp = `${path}/expanded.senseurl.x`;
-    $: isOpen = children.includes(pathSelectedProp);
-    async function handleClick() {
-        $infoBase[primaryKey] = await toggleProperty($infoBase[primaryKey], pathSelectedProp);
-        console.log("$infoBase:", $infoBase);
-    }
+    let isOpen = false;
+    function toggle() { isOpen = !isOpen; }
 
-
-    // 处理组件
     $: infoset = {[primaryKey]:$infoBase[primaryKey]};
     let components;
+
     onMount(async () => {
-        const moduleRegex = /(?<=\$)lib(\/[^\$]+)+\.(js|svelte)(?=[#\/]folderNameButton\.(\d+)\.senseurl\.x)/;
+        const moduleRegex = /(?<=\$)lib(\/.+)+\.(js|svelte)(?=[#\/]folder\.button\.(\d+)\.senseurl\.x)/;
         components = await loadComponents(infoset, moduleRegex);
         // console.log("component:", component);
     });
-
-
 </script>
 
-
-
-<button on:click={handleClick}>
+<button on:click={toggle}>
     {isOpen ? '⏷' : '⏵'}
 </button>
-
-
 
 {#if components && components[primaryKey]}
     {#each components[primaryKey] as component}
         <svelte:component this={component} {primaryKey} {path} {children}/>
     {/each}
 {/if}
+
+
+<!-- <Button1 text={path.split("/").pop()} /> -->
 
 
 

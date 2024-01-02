@@ -1,0 +1,22 @@
+[
+    "senseurl",
+    "senseurl/senseurl",
+    "senseurl/senseurl/senseurl.github",
+    "senseurl/senseurl/senseurl.net.http",
+    "senseurl/senseurl/senseurl.com.http",
+    "senseurl/senseurl/senseurl.x.ipfs",
+    "senseurl/senseurl/moonhi.eth.ipfs",
+    "senseurl/senseurl/senseurl.org.http",
+    "senseurl/senseurl/lodcal.history",
+    "$lib",
+    "$lib/entryTree",
+    "$lib/entryTree/tree.svelte",
+    "$lib/entryTree/tree.svelte/mainColumn.0.senseurl.x",
+    "$lib/entryTree/element",
+    "$lib/entryTree/element/button.folder.svelte",
+    "$lib/entryTree/element/button.folder.svelte/folderNameButton.0.senseurl.x",
+    "$lib/entryTree/element/button.file.svelte",
+    "$lib/entryTree/element/button.file.svelte/fileNameButton.0.senseurl.x",
+    "$lib/entryTree/element/thumbsUp.svelte",
+    "$lib/entryTree/element/thumbsUp.svelte/docWidget.0.senseurl.x"
+]

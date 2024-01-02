@@ -14,14 +14,19 @@ export function parseURLParameters(paramsString) {
             try {
                 const url = new URL(parts[0]);
                 const fqdn = url.hostname;
-                return [`${key}/${fqdn}.http`, parts[0], ...parts.slice(1)];
+                return [`senseurl/${key}/${fqdn}.http`, parts[0], ...parts.slice(1)];
             } catch (error) {
                 console.error(`Error parsing URL: ${parts[0]}`, error);
-                return ['suoyiai.com', parts[0], ...parts.slice(1)];
+                return ['senseurl.x', parts[0], ...parts.slice(1)];
             }
         });
         // fqdnUrlTagsMapArrays[key].push([key, fqdnUrlTagsMapArrays[key][0][1], "", ...fqdnUrlTagsMapArrays[key][0].slice(2)]);
-        fqdnUrlTagsMapArrays[key].push([key,]);
+        // fqdnUrlTagsMapArrays["senseurl"].push([`senseurl`,]);
+        // fqdnUrlTagsMapArrays["senseurl"].push([`senseurl/${key}`,]);
+        // fqdnUrlTagsMapArrays["senseurl"].push([`senseurl/${key}/sort.0.senseurl.x`,]);
+        fqdnUrlTagsMapArrays[key].push([`senseurl`,]);
+        fqdnUrlTagsMapArrays[key].push([`senseurl/${key}`,]);
+        fqdnUrlTagsMapArrays["senseurl"].push([`senseurl/senseurl/sort.0.senseurl.x`,]);
     });
     return fqdnUrlTagsMapArrays;
 }
@@ -107,7 +112,7 @@ export function mergeWithAppend(existingData, newData) {
 
 
 
-export async function loadComponents(pathUrlTagsMapArrays, regex) {
+export async function loadComponents2(pathUrlTagsMapArrays, regex) {
     const components = {};
     const loadPromises = [];
 
@@ -129,4 +134,68 @@ export async function loadComponents(pathUrlTagsMapArrays, regex) {
     }
     await Promise.all(loadPromises);
     return components;
+}
+
+
+
+export async function loadComponents(pathUrlTagsMapArrays, regex, sortIndex) {
+    const components = {};
+    const loadPromises = [];
+
+    for (const [key, value] of Object.entries(pathUrlTagsMapArrays)) {
+        let matches = [];
+
+        for (const item of value) {
+            const match = regex.exec(item[0]);
+
+            if (match) {
+                matches.push({ path: `/src/${match[0]}`, sortKey: parseInt(match[sortIndex], 10) });
+            }
+        }
+
+        // 根据 sortKey 排序 matches
+        matches.sort((a, b) => a.sortKey - b.sortKey);
+
+        // 加载并存储组件
+        for (const match of matches) {
+
+            loadPromises.push(
+                import(/* @vite-ignore */ match.path)
+                    .then(module => {
+                        if (!components[key]) {
+                            components[key] = [];
+                        }
+                        components[key].push(module.default);
+                    })
+                    .catch(error => { console.error(`加载组件失败：${match.path}`, error); })
+            );
+        }
+    }
+
+    await Promise.all(loadPromises);
+    return components;
+}
+
+
+
+
+export function mergeIntoKey(infoUrl, targetKey) {
+    // 确保目标键存在，如果不存在，则创建一个空数组
+    if (!infoUrl[targetKey]) {
+        infoUrl[targetKey] = [];
+    }
+
+    // 遍历对象的每个键
+    Object.keys(infoUrl).forEach(key => {
+        // 确保不是目标键本身
+        if (key !== targetKey) {
+            // 将当前键的数组合并到目标键的数组中
+            infoUrl[targetKey] = infoUrl[targetKey].concat(infoUrl[key]);
+
+            // 删除当前键
+            delete infoUrl[key];
+        }
+    });
+
+    return infoUrl;
 }

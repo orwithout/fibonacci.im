@@ -1,0 +1,82 @@
+// const debouncedWrite = debounce(() => {
+//     // 写入 IndexedDB 的逻辑
+// }, 300); // 延迟300毫秒
+
+// infoBase.subscribe($infoBase => {
+//     debouncedWrite();
+// });
+
+
+
+// const throttledRead = throttle(() => {
+//     // 从 IndexedDB 读取数据的逻辑
+// }, 300); // 每300毫秒最多执行一次
+
+// // 假设这是一个触发读取操作的事件
+// someEvent.on('event', () => {
+//     throttledRead();
+// });
+
+
+
+
+
+
+// // 使用示例
+// const throttledUpdate = throttle(() => {
+//     // 这里是您的更新逻辑
+// }, 250);
+
+// // 在事件监听器或响应式值的订阅中使用
+// infoBase.subscribe($infoBase => {
+//     throttledUpdate();
+// });
+
+
+
+// // 使用示例
+// const debouncedUpdate = debounce(() => {
+//     // 这里是您的更新逻辑
+// }, 250);
+
+// // 在事件监听器或响应式值的订阅中使用
+// infoBase.subscribe($infoBase => {
+//     debouncedUpdate();
+// });
+
+
+
+
+
+
+
+function debounce(func, wait) {
+    let timeout;
+
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+};
+
+
+
+
+function throttle(func, limit) {
+    let inThrottle;
+    return function() {
+        const args = arguments;
+        const context = this;
+        if (!inThrottle) {
+            func.apply(context, args);
+            inThrottle = true;
+            setTimeout(() => inThrottle = false, limit);
+        }
+    };
+}
+

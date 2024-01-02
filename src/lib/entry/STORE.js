@@ -2,7 +2,7 @@ import { writable } from 'svelte/store';
 
 
 
-export const inputUrl = writable({});
+export const urlSet = writable({});
 export const inputJson = writable({});
 export const infoSet = writable({});
 export const infoBase = writable({});

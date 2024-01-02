@@ -1,51 +1,33 @@
 <script>
     import { infoBase } from '$lib/entry/STORE.js';
-    // import Expand from "$lib/entryTree/expand.svelte";
-    // import { slide } from "svelte/transition";
+    import { toggleProperty } from '$lib/entry/fileSystemUtils';
+
 
     export let primaryKey;
     export let path;
     export let children;
 
     // 创建一个本地存储来跟踪选中状态
-    // let isSelected;
-    const pathSelectedProp = `${path}/selected.i`;
-    // 检查初始状态
+    const pathSelectedProp = `${path}/selected.senseurl.x`;
     $: isSelected = children.includes(pathSelectedProp);
-    // $: children = children || [];
-
-    // 点击事件处理
     async function handleClick() {
-        if (isSelected) {
-            // 移除选中项
-            $infoBase[primaryKey] = $infoBase[primaryKey].filter(item => item[0] !== pathSelectedProp);
-        } else {
-            // 添加选中项
-            $infoBase[primaryKey] = [...$infoBase[primaryKey] || [], [pathSelectedProp]];
-        }
+        $infoBase[primaryKey] = await toggleProperty($infoBase[primaryKey], pathSelectedProp);
+        console.log("$infoBase:", $infoBase);
     }
 
-    // $: parentPath = path.split('/').slice(0, -1).join('/');
 </script>
 
 <button on:click={handleClick} class:selected={isSelected}>
-    { path.split('/').pop()}
-    <!-- {console.log("children:", children)}
-    {console.log("pathx:", path)} -->
+    {path.split('/').pop()}
 </button>
 
-<!-- <ul>
-    {#if isSelected}
-        <div transition:slide={{ duration: 300 }}>
-                <Expand {primaryKey} path={parentPath}/>
-        </div>
-    {/if}
-</ul> -->
+
 
 <style>
     button {
+        padding: 0 0 0 0;
         background: none;
-        font-weight: bold;
+        /* font-weight: bold; */
         border: none;
     }
 
