@@ -26,7 +26,7 @@ export function parseURLParameters(paramsString) {
         // fqdnUrlTagsMapArrays["senseurl"].push([`senseurl/${key}/sort.0.senseurl.x`,]);
         fqdnUrlTagsMapArrays[key].push([`senseurl`,]);
         fqdnUrlTagsMapArrays[key].push([`senseurl/${key}`,]);
-        fqdnUrlTagsMapArrays["senseurl"].push([`senseurl/senseurl/sort.0.senseurl.x`,]);
+        // fqdnUrlTagsMapArrays["senseurl"].push([`senseurl/senseurl/sort.0.senseurl.x`,]);
     });
     return fqdnUrlTagsMapArrays;
 }

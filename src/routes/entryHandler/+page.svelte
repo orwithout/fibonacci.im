@@ -1,37 +1,106 @@
 <script>
+    import { onMount } from 'svelte';
+    import { loadData, upgradeDatabase } from '$lib/dataService';
+    import { infoBase, urlSet, components } from '$lib/entry/STORE.js';
+    import { loadComponents } from '$lib/entry/getopt.js';
+	import { t } from 'svelte-i18n';
+    onMount(async () => {
+        const inputSearch = window.location.search.slice(1);
+
+        // 当 inputSearch 不为空时，弹出确认框
+		if (inputSearch !== '') {
+			const confirmMessage = $t('confirmMessage', { inputSearch });
+			const confirmMerge = confirm(confirmMessage);
+			if (!confirmMerge) {
+				return; // 如果用户不确认，停止执行
+			}
+		}
+
+        // 用户确认后，执行数据加载和合并
+        const { mergedInfo, mergedUrl } = await loadData(inputSearch);
+        infoBase.set(mergedInfo);
+        urlSet.set(mergedUrl);
+        console.log("infoBase:", $infoBase);
+        console.log("urlSet:", $urlSet);
+
+        if (Object.keys(mergedInfo).length > 0) {
+            const moduleRegex = /(?<=\$)lib(\/[^\$]+)+\.(js|svelte)(?=[#\/]mainColumn.(\d+).senseurl.x)/;
+            components.set(await loadComponents(mergedInfo, moduleRegex, 3));
+        }
+
+        await upgradeDatabase();
+    });
+</script>
+
+{#if Object.keys($components).length > 0}
+	{#if $infoBase.senseurl && $components['senseurl']}
+		<div class="value-container">
+			<svelte:component this={$components['senseurl'][0]} primaryKey="senseurl"/>
+		</div><br>
+	{/if}
+	<!-- <p class="notice">2023年11月21日 (更多仍在建设中...)</p> -->
+	{#each Object.keys($infoBase) as key}
+	<div class="keys-container">
+		{#if key !== 'senseurl' &&  $components[key]}
+			<div class="value-container">
+				<svelte:component this={$components[key][0]} primaryKey={key}/>
+			</div>
+		{/if}
+	</div>
+	{/each}
+{/if}
+
+<style>
+	.keys-container {
+		display: flex;
+		white-space: nowrap;
+		gap: 5em;
+	}
+
+	.value-container {
+		flex-direction: column;
+	}
+</style>
+
+
+
+<!-- <script>
 	import { onMount } from 'svelte';
 	import { parseURLParameters, parseJSONParameters, fetchDataForParams, mergeWithAppend, loadComponents, mergeIntoKey } from '$lib/entry/getopt.js';
 	import { urlSet, infoBase, components } from '$lib/entry/STORE.js';
-	import { upgradeDB } from '$lib/indexedDB/common.js';
+	import { upgradeDB } from '$lib/localDB/common.js';
 
 
 
 	onMount(async () => {
-		// 设置默认参数 和 获取 URL 参数
-		const defaultUrl = `senseurl==${window.location.origin}/entryDefault.json`;
-		let localsearch = window.location.search.slice(1);
-		localsearch = `${defaultUrl};;${localsearch}`;
-		console.log("localsearch:", localsearch);
-		console.log("localsearch:", window.location.hostname);
-		
-		// 从参数中解析出 urlSet 和 inputJson
-		const parsedInputUrl = await parseURLParameters(localsearch);
-		const parsedInputJson = await parseJSONParameters(localsearch);
-		// 如果url 中带入了json 则将其中的参数合并到 urlSet 中
-		urlSet.set({ ...parsedInputUrl, ...(parsedInputJson.urlSet || {}) });
-		// inputJson.set(parsedInputJson);
+		// 前端页面代码内置默认数据
+		const defaultUrl = await parseURLParameters(`senseurl==${window.location.origin}/entryDefault.json`);
+		const defaultInfo = await fetchDataForParams(defaultUrl);
 
-		// 从 urlSet 中获取数据
-		const fetchedData = await fetchDataForParams($urlSet);
-		// 同键替换		
-		// infoSet.set({ ...defaultInfo, ...fetchedData});
-		// infoSet.set({ ...defaultInfo, ...fetchedData, ...(parsedInputJson.infoSet || {}) });
-		// 同键追加
-		infoBase.set(mergeWithAppend(fetchedData, (parsedInputJson.infoBase || {})));
-		infoBase.set(mergeWithAppend($urlSet, $infoBase));
-		urlSet.set(mergeIntoKey($urlSet, 'senseurl'));
-		
-		
+		// 本地 indexedDB 存储的数据
+		localUrl = await parseURLParameters(`senseurl==${window.location.origin}/indexedDB?storename=infoBase`);
+		const localInfo = await fetchDataForParams(localUrl);
+
+		// 从参数中解析出的数据
+		const inputSearch = window.location.search.slice(1);
+		const inputJson = await parseJSONParameters(inputSearch);
+		const inputUrl = { ...(await parseURLParameters(inputSearch)), ...inputJson.Url || {} };
+		const inputInfo = { ...(await fetchDataForParams(inputUrl)), ...inputJson.Info || {} };
+
+		// 各个来源的数据 合并规则
+		if (inputSearch === '') {
+			infoBase.set({ ...defaultInfo, ...(localInfo || {}) });
+			urlSet.set({ ...defaultUrl, ...(localUrl || {}) });
+		} else {
+			// 同键替换
+			infoBase.set({ ...defaultInfo, ...(localInfo || {}) });
+			// 同键追加
+			infoBase.set(mergeWithAppend($infoBase, (inputInfo || {})));
+
+			urlSet.set({ ...defaultUrl, ...(localUrl || {}) });
+			urlSet.set(mergeWithAppend($urlSet, (inputUrl || {})));
+		}
+
 
 		console.log("urlSet:", $urlSet);
 		// console.log("inputJson:", $inputJson);
@@ -51,48 +120,6 @@
 
 		// 初始化 indexedDB 回收站
 		upgradeDB("RecycleBin", "create")
-
 	});
 
-</script>
-
-{#if Object.keys($components).length > 0}
-	{#if $infoBase.senseurl && $components['senseurl']}
-		<div class="value-container">
-			<svelte:component this={$components['senseurl'][0]} primaryKey="senseurl"/>
-		</div>
-	{/if}
-	<br>
-    <!-- <p class="notice">2023年11月21日 (更多仍在建设中...)</p> -->
-	<div class="keys-container">
-			{#each Object.keys($infoBase) as key}
-				{#if key !== 'senseurl'}
-					<div class="value-container">
-						{#if $components[key]}
-							<svelte:component this={$components[key][0]} primaryKey={key}/>
-						{/if}
-					</div>
-				{/if}
-			{/each}
-	</div>
-{/if}
-
-<style>
-	.keys-container {
-		display: flex;
-		white-space: nowrap;
-		gap: 5em;
-	}
-
-	.value-container {
-		flex-direction: column;
-	}
-	/* .notice {
-            color: #777777;
-            font-size: 0.9em;
-            margin-top: 30px;
-            border-top: 1px solid;
-            padding-top: 10px;
-        } */
-</style>
-
+</script> -->
